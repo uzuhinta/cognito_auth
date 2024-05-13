@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authenticate } from "./services/authenticate";
+import { signIn } from 'aws-amplify/auth'
 import { Button, TextField, Typography } from "@mui/material";
 
 function Login() { 
@@ -53,7 +53,11 @@ function Login() {
     validation()
       .then((res) => {
         if (res.email === '' && res.password === '') {
-          authenticate(email,password)
+
+          signIn({
+            username: email,
+            password
+          })
           .then((data)=>{
             console.log('data', data)
             setLoginErr('');

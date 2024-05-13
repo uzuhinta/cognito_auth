@@ -1,35 +1,37 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import userpool from "./userpool";
-import { logout } from "./services/authenticate";
 import { Button } from "@mui/material";
+import { getCurrentUser, signOut } from "aws-amplify/auth";
 
 function Dashboard() {
-    const Navigate = useNavigate();
+  const Navigate = useNavigate();
 
-  useEffect(()=>{
-    let user=userpool.getCurrentUser();
-    console.log(user);
-    if(!user){
-      Navigate('/login');
-    }
-  },[]);
+  useEffect(() => {
+    const getUser = async () => {
+      let user = await getCurrentUser();
+      console.log("user", JSON.stringify(user));
+      if (!user) {
+        Navigate("/login");
+      }
+    };
+    getUser();
+  }, []);
 
-  const handleLogoout=()=>{
-    logout();
+  const handleLogoout = () => {
+    signOut();
   };
 
   return (
-    <div className='Dashboard'>
+    <div className="Dashboard">
       <Button
-        style={{margin:"10px"}}
-        variant='contained'
+        style={{ margin: "10px" }}
+        variant="contained"
         onClick={handleLogoout}
       >
         Logout
       </Button>
     </div>
-  )
+  );
 }
 
 export default Dashboard;

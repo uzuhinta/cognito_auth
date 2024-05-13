@@ -1,8 +1,6 @@
-import { useState } from "react";
-import { Navigate } from "react-router-dom";
-import userpool from "./userpool";
-import { CognitoUserAttribute } from "amazon-cognito-identity-js";
 import { Button, TextField } from "@mui/material";
+import { signUp } from "aws-amplify/auth";
+import { useState } from "react";
 
 function Signup() {
     const [email, setEmail] = useState('');
@@ -49,26 +47,19 @@ function Signup() {
     setEmailErr("");
     setPasswordErr("");
     validation()
-      .then((res) => {
+      .then(async (res) => {
         if (res.email === '' && res.password === '') {
-          const attributeList = [];
-          attributeList.push(
-            new CognitoUserAttribute({
-              Name: 'email',
-              Value: email,
-            })
-          );
           let username=email;
-          userpool.signUp(username, password, attributeList, null, (err, data) => {
-            if (err) {
-              console.log(err);
-              alert("Couldn't sign up");
-            } else {
-              console.log(data);
-              alert('User Added Successfully');
-              Navigate('/dashboard');
+          const { isSignUpComplete, userId, nextStep } = await signUp({
+            username,
+            password,
+            options: {
+              userAttributes: {
+                email
+              },
             }
           });
+          console.log('isSignUpComplete, userId, nextStep',{isSignUpComplete, userId, nextStep },)
         }
       }, err => console.log(err))
       .catch(err => console.log(err));
