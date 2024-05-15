@@ -49,37 +49,40 @@ def sigv4_request(
     data=req.body
   )
 
-
-print("hello")
-message = {"cciCode":"testCCI","companyCode":"Hello from local with IAM role","content":{"a":1,"b":"he"},"id":"testID"}
-query = """
-mutation SEND_MESSAGE($message: AWSJSON!) {
-  sendMessage(message: $message) {
-    cciCode
-    companyCode
-    content
-    id
+def lambda_handler(event, context):
+  print(f'region: {os.environ['AWS_REGION']}')
+  print(f'credential: {Session().get_credentials().get_frozen_credentials()}')
+  
+  print("hello")
+  message = {"cciCode":"testCCI","companyCode":"Hello from local with IAM role","content":{"a":1,"b":"he"},"id":"testID"}
+  query = """
+  mutation SEND_MESSAGE($message: AWSJSON!) {
+    sendMessage(message: $message) {
+      cciCode
+      companyCode
+      content
+      id
+    }
   }
-}
-"""
-body = json.dumps({
-    "query": query,
-    "variables": {
-        "message": json.dumps(message),
-    },
-})
-# send request
-response = sigv4_request(
-'https://qyte2xsv3veorcshyitwogoyue.appsync-api.ap-northeast-1.amazonaws.com/graphql',
-method='POST',
-headers={
-    'Content-Type': 'application/graphql',
-},
-body=body,
-# In Lambda functions, you can omit 'region' and 'credentials' to use the Lambda's region and credentials
-service="appsync"
-)
+  """
+  body = json.dumps({
+      "query": query,
+      "variables": {
+          "message": json.dumps(message),
+      },
+  })
+  # send request
+  response = sigv4_request(
+  'https://qyte2xsv3veorcshyitwogoyue.appsync-api.ap-northeast-1.amazonaws.com/graphql',
+  method='POST',
+  headers={
+      'Content-Type': 'application/graphql',
+  },
+  body=body,
+  # In Lambda functions, you can omit 'region' and 'credentials' to use the Lambda's region and credentials
+  service="appsync"
+  )
 
-# do something with response
-print(response.status_code)
-print(response._content)
+  # do something with response
+  print(response.status_code)
+  print(response._content)

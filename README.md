@@ -1,8 +1,12 @@
-# React + Vite
+# command
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+```sh
+pip install --target ./package requests
+pip install --target ./package boto3
 
-Currently, two official plugins are available:
+cd package/
+zip -r ../my_deployment_package.zip . 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+cd ..
+zip my_deployment_package.zip lambda_function.py
+```
