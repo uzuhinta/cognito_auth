@@ -1,0 +1,113 @@
+{
+  "version": "36.0.0",
+  "artifacts": {
+    "HelloCdkStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "HelloCdkStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "HelloCdkStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://730335414799/ap-northeast-1",
+      "properties": {
+        "templateFile": "HelloCdkStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::730335414799:role/cdk-hnb659fds-deploy-role-730335414799-ap-northeast-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::730335414799:role/cdk-hnb659fds-cfn-exec-role-730335414799-ap-northeast-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-730335414799-ap-northeast-1/b90effc9249c8c699892ab57ccae4f2540944ecf7983fc0884ead7c0b152d45b.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "HelloCdkStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::730335414799:role/cdk-hnb659fds-lookup-role-730335414799-ap-northeast-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "HelloCdkStack.assets"
+      ],
+      "metadata": {
+        "/HelloCdkStack/UserPoolId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserPoolId"
+          }
+        ],
+        "/HelloCdkStack/dev-realtime/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devrealtime61CF06E6"
+          }
+        ],
+        "/HelloCdkStack/dev-realtime/Schema": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devrealtimeSchema5D8EAE1A"
+          }
+        ],
+        "/HelloCdkStack/dev-realtime/DefaultApiKey": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devrealtimeDefaultApiKey09662BE0"
+          }
+        ],
+        "/HelloCdkStack/dev-realtime/NoneDataSource/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devrealtimeNoneDataSourceA8A52ADC"
+          }
+        ],
+        "/HelloCdkStack/dev-realtime/sendMessageResolver/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "devrealtimesendMessageResolver4D3793DE"
+          }
+        ],
+        "/HelloCdkStack/GraphQLAPIURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GraphQLAPIURL"
+          }
+        ],
+        "/HelloCdkStack/GraphQLAPIKey": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GraphQLAPIKey"
+          }
+        ],
+        "/HelloCdkStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/HelloCdkStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/HelloCdkStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "HelloCdkStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

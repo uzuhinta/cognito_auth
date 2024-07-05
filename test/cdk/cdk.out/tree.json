@@ -1,0 +1,249 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "HelloCdkStack": {
+        "id": "HelloCdkStack",
+        "path": "HelloCdkStack",
+        "children": {
+          "user-pool": {
+            "id": "user-pool",
+            "path": "HelloCdkStack/user-pool",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.Resource",
+              "version": "2.140.0"
+            }
+          },
+          "UserPoolId": {
+            "id": "UserPoolId",
+            "path": "HelloCdkStack/UserPoolId",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.140.0"
+            }
+          },
+          "dev-realtime": {
+            "id": "dev-realtime",
+            "path": "HelloCdkStack/dev-realtime",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "HelloCdkStack/dev-realtime/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AppSync::GraphQLApi",
+                  "aws:cdk:cloudformation:props": {
+                    "additionalAuthenticationProviders": [
+                      {
+                        "authenticationType": "AWS_IAM"
+                      },
+                      {
+                        "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+                        "userPoolConfig": {
+                          "userPoolId": "ap-northeast-1_wdEnqD27Q",
+                          "awsRegion": "ap-northeast-1",
+                          "defaultAction": "ALLOW"
+                        }
+                      }
+                    ],
+                    "authenticationType": "API_KEY",
+                    "name": "dev-realtime"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_appsync.CfnGraphQLApi",
+                  "version": "2.140.0"
+                }
+              },
+              "Schema": {
+                "id": "Schema",
+                "path": "HelloCdkStack/dev-realtime/Schema",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AppSync::GraphQLSchema",
+                  "aws:cdk:cloudformation:props": {
+                    "apiId": {
+                      "Fn::GetAtt": [
+                        "devrealtime61CF06E6",
+                        "ApiId"
+                      ]
+                    },
+                    "definition": "type Message @aws_api_key @aws_iam @aws_cognito_user_pools @aws_oidc {\n  id: String!\n  table: String\n  pk: String\n  sk: String\n  tenantCode: String!\n  action: String!\n  content: AWSJSON!\n}\n\ntype Query {\n  getMessage(id: String!): Message\n}\n\ntype Mutation {\n  sendMessage(message: AWSJSON!): Message! @aws_iam @aws_api_key\n}\n\ntype Subscription {\n  onMessage(tenantCode: String!, action: String, id: String): Message\n    @aws_subscribe(mutations: [\"sendMessage\"])\n    @aws_api_key\n    @aws_iam\n    @aws_cognito_user_pools\n    @aws_oidc\n}\n\nschema {\n  query: Query\n  mutation: Mutation\n  subscription: Subscription\n}\n"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_appsync.CfnGraphQLSchema",
+                  "version": "2.140.0"
+                }
+              },
+              "DefaultApiKey": {
+                "id": "DefaultApiKey",
+                "path": "HelloCdkStack/dev-realtime/DefaultApiKey",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AppSync::ApiKey",
+                  "aws:cdk:cloudformation:props": {
+                    "apiId": {
+                      "Fn::GetAtt": [
+                        "devrealtime61CF06E6",
+                        "ApiId"
+                      ]
+                    },
+                    "expires": 1750908895
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_appsync.CfnApiKey",
+                  "version": "2.140.0"
+                }
+              },
+              "LogGroup": {
+                "id": "LogGroup",
+                "path": "HelloCdkStack/dev-realtime/LogGroup",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.140.0"
+                }
+              },
+              "NoneDataSource": {
+                "id": "NoneDataSource",
+                "path": "HelloCdkStack/dev-realtime/NoneDataSource",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "HelloCdkStack/dev-realtime/NoneDataSource/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AppSync::DataSource",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Fn::GetAtt": [
+                            "devrealtime61CF06E6",
+                            "ApiId"
+                          ]
+                        },
+                        "name": "NoneDataSource",
+                        "type": "NONE"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_appsync.CfnDataSource",
+                      "version": "2.140.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_appsync.NoneDataSource",
+                  "version": "2.140.0"
+                }
+              },
+              "sendMessageResolver": {
+                "id": "sendMessageResolver",
+                "path": "HelloCdkStack/dev-realtime/sendMessageResolver",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "HelloCdkStack/dev-realtime/sendMessageResolver/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Fn::GetAtt": [
+                            "devrealtime61CF06E6",
+                            "ApiId"
+                          ]
+                        },
+                        "dataSourceName": "NoneDataSource",
+                        "fieldName": "sendMessage",
+                        "kind": "UNIT",
+                        "requestMappingTemplate": "{\"version\": \"2018-05-29\",\"payload\": $util.toJson($context.arguments.message)}",
+                        "responseMappingTemplate": "$util.toJson($context.result)",
+                        "typeName": "Mutation"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_appsync.CfnResolver",
+                      "version": "2.140.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_appsync.Resolver",
+                  "version": "2.140.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_appsync.GraphqlApi",
+              "version": "2.140.0"
+            }
+          },
+          "GraphQLAPIURL": {
+            "id": "GraphQLAPIURL",
+            "path": "HelloCdkStack/GraphQLAPIURL",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.140.0"
+            }
+          },
+          "GraphQLAPIKey": {
+            "id": "GraphQLAPIKey",
+            "path": "HelloCdkStack/GraphQLAPIKey",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.140.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "HelloCdkStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "HelloCdkStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.140.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.3.0"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "HelloCdkStack/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.140.0"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "HelloCdkStack/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.140.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.140.0"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.3.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.140.0"
+    }
+  }
+}

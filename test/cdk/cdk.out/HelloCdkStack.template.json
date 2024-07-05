@@ -1,0 +1,163 @@
+{
+ "Outputs": {
+  "UserPoolId": {
+   "Value": "ap-northeast-1_wdEnqD27Q"
+  },
+  "GraphQLAPIURL": {
+   "Value": {
+    "Fn::GetAtt": [
+     "devrealtime61CF06E6",
+     "GraphQLUrl"
+    ]
+   }
+  },
+  "GraphQLAPIKey": {
+   "Value": {
+    "Fn::GetAtt": [
+     "devrealtimeDefaultApiKey09662BE0",
+     "ApiKey"
+    ]
+   }
+  }
+ },
+ "Resources": {
+  "devrealtime61CF06E6": {
+   "Type": "AWS::AppSync::GraphQLApi",
+   "Properties": {
+    "AdditionalAuthenticationProviders": [
+     {
+      "AuthenticationType": "AWS_IAM"
+     },
+     {
+      "AuthenticationType": "AMAZON_COGNITO_USER_POOLS",
+      "UserPoolConfig": {
+       "AwsRegion": "ap-northeast-1",
+       "UserPoolId": "ap-northeast-1_wdEnqD27Q"
+      }
+     }
+    ],
+    "AuthenticationType": "API_KEY",
+    "Name": "dev-realtime"
+   },
+   "Metadata": {
+    "aws:cdk:path": "HelloCdkStack/dev-realtime/Resource"
+   }
+  },
+  "devrealtimeSchema5D8EAE1A": {
+   "Type": "AWS::AppSync::GraphQLSchema",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "devrealtime61CF06E6",
+      "ApiId"
+     ]
+    },
+    "Definition": "type Message @aws_api_key @aws_iam @aws_cognito_user_pools @aws_oidc {\n  id: String!\n  table: String\n  pk: String\n  sk: String\n  tenantCode: String!\n  action: String!\n  content: AWSJSON!\n}\n\ntype Query {\n  getMessage(id: String!): Message\n}\n\ntype Mutation {\n  sendMessage(message: AWSJSON!): Message! @aws_iam @aws_api_key\n}\n\ntype Subscription {\n  onMessage(tenantCode: String!, action: String, id: String): Message\n    @aws_subscribe(mutations: [\"sendMessage\"])\n    @aws_api_key\n    @aws_iam\n    @aws_cognito_user_pools\n    @aws_oidc\n}\n\nschema {\n  query: Query\n  mutation: Mutation\n  subscription: Subscription\n}\n"
+   },
+   "Metadata": {
+    "aws:cdk:path": "HelloCdkStack/dev-realtime/Schema"
+   }
+  },
+  "devrealtimeDefaultApiKey09662BE0": {
+   "Type": "AWS::AppSync::ApiKey",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "devrealtime61CF06E6",
+      "ApiId"
+     ]
+    },
+    "Expires": 1750908895
+   },
+   "DependsOn": [
+    "devrealtimeSchema5D8EAE1A"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "HelloCdkStack/dev-realtime/DefaultApiKey"
+   }
+  },
+  "devrealtimeNoneDataSourceA8A52ADC": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "devrealtime61CF06E6",
+      "ApiId"
+     ]
+    },
+    "Name": "NoneDataSource",
+    "Type": "NONE"
+   },
+   "Metadata": {
+    "aws:cdk:path": "HelloCdkStack/dev-realtime/NoneDataSource/Resource"
+   }
+  },
+  "devrealtimesendMessageResolver4D3793DE": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "devrealtime61CF06E6",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "NoneDataSource",
+    "FieldName": "sendMessage",
+    "Kind": "UNIT",
+    "RequestMappingTemplate": "{\"version\": \"2018-05-29\",\"payload\": $util.toJson($context.arguments.message)}",
+    "ResponseMappingTemplate": "$util.toJson($context.result)",
+    "TypeName": "Mutation"
+   },
+   "DependsOn": [
+    "devrealtimeNoneDataSourceA8A52ADC",
+    "devrealtimeSchema5D8EAE1A"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "HelloCdkStack/dev-realtime/sendMessageResolver/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WN3QqCQBSEn8X79bRKLyAFXRRF+gBxWk+4/qzb/igivntsYdTVzDcMMykkWw48wtHGomziVt5hLhyKhuVke28Esd1DXbzT3jEc7Q21tpMSMB8M6urZZlqGxpuup38qREUdhiDT8kgTO/eK9uiw+C7/UDhsBzIhXv2yQmgsTPUlQW03Q8ohSYBHtZUyNl452RHkH30ByiJ/tNQAAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "HelloCdkStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
