@@ -13,8 +13,8 @@ import Subscribe from "./Subscribe";
 Amplify.configure({
   API: {
     GraphQL: {
-      endpoint: import.meta.env.VITE_GRAPHQL_URL,
-      region: "ap-northeast-1",
+      endpoint: "https://cqsdjswqa5fn5dbgkemxae4qu4.appsync-api.ap-northeast-1.amazonaws.com/graphql",
+      region: "us-northeast-1",
       defaultAuthMode: "userPool",
     },
   },

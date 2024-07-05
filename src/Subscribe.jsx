@@ -9,7 +9,9 @@ const client = generateClient();
 export default function Subscribe() {
   const [data, setData] = useState("");
   const [received, setReceived] = useState("");
-  const [cciCode, setCciCode] = useState("");
+  const [received2, setReceived2] = useState("");
+  const [tenantCode, setTenantCode] = useState("");
+  const [id, setId] = useState("");
 
   // Publish data to subscribed clients
   async function handleSubmit(evt) {
@@ -23,9 +25,9 @@ export default function Subscribe() {
 
   // subscribe to events
   useEffect(() => {
-    console.log("cciCode", cciCode);
+    console.log("tenantCode", tenantCode);
     const sub = client
-      .graphql({ query: onMessage, variables: { cciCode } })
+      .graphql({ query: onMessage, variables: { tenantCode } })
       .subscribe({
         next: ({ data }) => {
           console.log("@@@@", data.onMessage);
@@ -34,11 +36,27 @@ export default function Subscribe() {
         error: (error) => console.warn(error),
       });
     return () => sub.unsubscribe();
-  }, [cciCode]);
+  }, [tenantCode]);
+
+  // subscribe to events
+  useEffect(() => {
+    console.log("id", id);
+    const sub = client
+      .graphql({ query: onMessage, variables: { tenantCode, id } })
+      .subscribe({
+        next: ({ data }) => {
+          console.log("@@@@", data.onMessage);
+          setReceived2(JSON.stringify(data.onMessage));
+        },
+        error: (error) => console.warn(error),
+      });
+    return () => sub.unsubscribe();
+  }, [id]);
 
   return (
     <div className="App">
-      <input onChange={(e) => setCciCode(e.target.value)} />
+      CCI: <input onChange={(e) => setTenantCode(e.target.value)} />
+      ID: <input onChange={(e) => setId(e.target.value)} />
       <header className="App-header">
         <p>Send/Push JSON to channel &quot;{name}&quot;...</p>
         <form onSubmit={handleSubmit}>
@@ -54,7 +72,12 @@ export default function Subscribe() {
           <input type="submit" value="Submit" />
         </form>
         <p>Subscribed/Listening to channel &quot;{name}&quot;...</p>
+        received
         <pre>{!received || JSON.stringify(JSON.parse(received), null, 2)}</pre>
+        received2
+        <pre>
+          {!received2 || JSON.stringify(JSON.parse(received2), null, 2)}
+        </pre>
       </header>
     </div>
   );
