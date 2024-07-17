@@ -10,7 +10,7 @@ export default function Subscribe() {
   const [data, setData] = useState("");
   const [received, setReceived] = useState("");
   const [received2, setReceived2] = useState("");
-  const [tenantCode, setTenantCode] = useState("");
+  const [tenantCode, setTenantCode] = useState("4653");
   const [id, setId] = useState("");
 
   // Publish data to subscribed clients
@@ -26,6 +26,7 @@ export default function Subscribe() {
   // subscribe to events
   useEffect(() => {
     console.log("tenantCode", tenantCode);
+    console.log("before suscribe", client.subscriptions);
     const sub = client
       .graphql({ query: onMessage, variables: { tenantCode } })
       .subscribe({
@@ -35,6 +36,8 @@ export default function Subscribe() {
         },
         error: (error) => console.warn(error),
       });
+    console.log("after suscribe", client.subscriptions);
+
     return () => sub.unsubscribe();
   }, [tenantCode]);
 
